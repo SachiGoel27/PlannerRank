@@ -54,8 +54,6 @@ def get_assignments():
 
     return assignmentDictionary
 
-assignmentDictionary = get_assignments()
-
 # # Function to get suggested start date from OpenAI
 # def get_suggested_start_date(assignment_name, due_date):
 #     prompt = f"Given that the assignment '{assignment_name}' is due on {due_date}, suggest an appropriate start date considering workload and optimal study habits. Provide only the date in YYYY-MM-DD format."
@@ -69,33 +67,6 @@ assignmentDictionary = get_assignments()
     
 #     return response["choices"][0]["message"]["content"].strip()
 
-# # Function to create the full assignment schedule
-# def create_full_schedule():
-#     courses = get_courses()
-#     full_schedule = {}
-
-#     for course in courses:
-#         course_name = course["name"]
-#         course_id = course["id"]
-#         assignments = get_canvas_assignments(course_id)
-
-#         course_schedule = {}
-#         for assignment in assignments:
-#             name = assignment["name"]
-#             due_date = assignment.get("due_at")  # Example: "2025-03-15T23:59:00Z"
-
-#             if due_date:
-#                 due_date_formatted = datetime.strptime(due_date, "%Y-%m-%dT%H:%M:%SZ").date()
-#                 suggested_start_date = get_suggested_start_date(name, due_date_formatted)
-
-#                 course_schedule[name] = [suggested_start_date, str(due_date_formatted)]
-
-#         if course_schedule:
-#             full_schedule[course_name] = course_schedule
-
-#     return full_schedule
-
-# # Run script
-# if __name__ == "__main__":
-#     schedule = create_full_schedule()
-#     print(schedule)
+# Run script
+if __name__ == "__main__":
+    assignmentDictionary = get_assignments()

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Calendar</title>
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        /* Earthy color scheme */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F4ECE1; /* Light beige */
+            color: #5B4636; /* Warm brown */
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #3A2D1E; /* Darker brown */
+        }
+
+        /* Calendar container */
+        .calendar-container {
+            background-color: #D1C0A8; /* Soft earthy tan */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Floating + Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #8A6F48; /* Deep warm brown */
+            color: white;
+            border: none;
+            font-size: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .floating-btn:hover {
+            background-color: #6E5633;
+            transform: scale(1.1);
+        }
+
+        /* Popup Menu */
+        .popup-menu {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background-color: #C7B299;
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+        }
+
+        .popup-menu button {
+            background-color: #6E5633;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 150px;
+        }
+
+        .popup-menu button:hover {
+            background-color: #5B4636;
+        }
+
+        /* Assignment Form */
+        .assignment-form {
+            display: none;
+            background-color: #C7B299; /* Earthy light brown */
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 300px;
+            margin: 10px auto;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        input, button {
+            margin-top: 10px;
+            padding: 8px;
+            width: 90%;
+            border: 1px solid #8A6F48;
+            border-radius: 5px;
+        }
+
+        .submit-btn {
+            background-color: #6E5633;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #5B4636;
+        }
+    </style>
+</head>
+<body>
+    <h1>Assignment Calendar</h1>
+
+    <!-- Calendar Container -->
+    <div class="calendar-container">
+        <div id="calendar"></div>
+    </div>
+
+    <!-- Assignment Form -->
+    <div id="assignmentForm" class="assignment-form">
+        <input type="text" id="assignmentTitle" placeholder="Assignment Title">
+        <input type="date" id="assignmentDate">
+        <button class="submit-btn" onclick="addAssignment()">Submit</button>
+    </div>
+
+    <!-- Floating + Button -->
+    <button class="floating-btn" onclick="togglePopup()">+</button>
+
+    <!-- Popup Menu -->
+    <div id="popupMenu" class="popup-menu">
+        <button onclick="showAssignmentForm()">Add Task Manually</button>
+        <button onclick="askQuinn()">Ask Quinn (AI Suggestions)</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let calendarEl = document.getElementById('calendar');
+            let calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: '/get_assignments'
+            });
+            calendar.render();
+        });
+
+        function togglePopup() {
+            let popup = document.getElementById('popupMenu');
+            popup.style.display = (popup.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function showAssignmentForm() {
+            document.getElementById('assignmentForm').style.display = 'block';
+            document.getElementById('popupMenu').style.display = 'none';
+        }
+
+        function addAssignment() {
+            let title = document.getElementById('assignmentTitle').value;
+            let dueDate = document.getElementById('assignmentDate').value;
+
+            $.ajax({
+                url: '/add_assignment',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ title: title, due_date: dueDate }),
+                success: function () {
+                    location.reload(); // Reload page to update calendar
+                }
+            });
+        }
+
+        function askQuinn() {
+            alert("Quinn AI integration coming soon!");
+        }
+    </script>
+</body>
+</html>

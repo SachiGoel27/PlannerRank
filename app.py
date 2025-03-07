@@ -15,6 +15,7 @@ class Assignment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     due_date = db.Column(db.DateTime, nullable=False)
+    class_id = db.Column(db.Integer, nullable=False) 
 
 # Create the database
 with app.app_context():

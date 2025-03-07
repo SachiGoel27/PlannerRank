@@ -1,5 +1,4 @@
 import requests
-import json
 
 # Replace these with your Canvas instance details
 API_URL = "https://canvas.instructure.com/api/v1"

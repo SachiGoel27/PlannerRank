@@ -118,6 +118,24 @@
         .submit-btn:hover {
             background-color: #5B4636;
         }
+        /* Style FullCalendar Header Buttons */
+        .fc-toolbar-chunk .fc-button {
+            background-color: #8A6F48 !important; /* Deep warm brown */
+            border: none !important;
+            color: white !important;
+            padding: 8px 12px !important;
+            border-radius: 6px !important;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .fc-toolbar-chunk .fc-button:hover {
+            background-color: #6E5633 !important; /* Darker brown */
+        }
+
+        /* Style active button (Today) */
+        .fc-toolbar-chunk .fc-button.fc-button-active {
+            background-color: #5B4636 !important;
+        }
     </style>
 </head>
 <body>
@@ -142,6 +160,7 @@
     <div id="popupMenu" class="popup-menu">
         <button onclick="showAssignmentForm()">Add Task Manually</button>
         <button onclick="askQuinn()">Ask Quinn (AI Suggestions)</button>
+        <button onclick="syncCanvas()">Sync with Canvas</button>
     </div>
 
     <script>
@@ -154,6 +173,19 @@
             calendar.render();
         });
 
+        document.addEventListener('DOMContentLoaded', function () {
+            let calendarEl = document.getElementById('calendar');
+            fetch('/get_assignments')
+            .then(response => response.json())
+            .then(events => {
+                let calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    events: events
+                });
+                calendar.render();
+            });
+        });
+
         function togglePopup() {
             let popup = document.getElementById('popupMenu');
             popup.style.display = (popup.style.display === 'flex') ? 'none' : 'flex';
@@ -162,6 +194,15 @@
         function showAssignmentForm() {
             document.getElementById('assignmentForm').style.display = 'block';
             document.getElementById('popupMenu').style.display = 'none';
+        }
+
+        function syncCanvas() {
+            fetch('/sync_canvas')
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload(); // Refresh page to show new assignments
+            });
         }
 
         function addAssignment() {
